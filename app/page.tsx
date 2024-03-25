@@ -1,5 +1,13 @@
 import { Button } from "@/components/ui/button";
+import { UserButton } from "@clerk/nextjs";
 
 export default function Home() {
-  return <Button size="sm">Click me</Button>;
+  return (
+    <div>
+      <div>Authenticated users only</div>
+      <div>
+        <UserButton />
+      </div>
+    </div>
+  );
 }
