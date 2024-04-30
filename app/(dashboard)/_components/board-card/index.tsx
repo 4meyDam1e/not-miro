@@ -1,16 +1,22 @@
 "use client";
 
-import Image from "next/image";
+
+import { toast } from "sonner";
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@clerk/nextjs";
 import { MoreHorizontal } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
+import { api } from "@/convex/_generated/api";
 import { Actions } from "@/components/actions";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useApiMutation } from "@/hooks/use-api-mutation";
+// import { useMutation } from "convex/react";
 
 import { Footer } from "./footer";
 import { Overlay } from "./overlay";
+// import { Id } from "@/convex/_generated/dataModel";
 
 interface BoardCardProps {
   id: string;
@@ -34,10 +40,36 @@ export const BoardCard = ({
   isFavourite,
 }: BoardCardProps) => {
   const { userId } = useAuth();
+
   const authorLabel = userId === authorId ? "You" : authorName;
   const createAtLabel = formatDistanceToNow(createdAt, {
     addSuffix: true,
   });
+
+  /* Need to manually keep track of pending if done this way  */
+  // const handleFavourite = useMutation(api.board.favourite);
+  // const handleUnfavourite = useMutation(api.board.unfavourite);
+
+  const {
+    mutate: onFavourite,
+    pending: pendingFavourite
+  } = useApiMutation(api.board.favourite);
+  const {
+    mutate: onUnfavourite,
+    pending: pendingUnfavourite
+  } = useApiMutation(api.board.unfavourite);
+
+  const toggleFavourite = () => {
+    if (isFavourite) {
+      // handleUnfavourite({ id: id as Id<"boards"> })
+      onUnfavourite({ id })
+        .catch(() => toast.error("Failed to unfavourite"));
+    } else {
+      // handleFavourite({ id: id as Id<"boards">, orgId })
+      onFavourite({ id, orgId })
+        .catch(() => toast.error("Failed to favourite"));
+    }
+  };
 
   return (
     <Link href={`/board/${id}`}>
@@ -63,12 +95,12 @@ export const BoardCard = ({
         </div>
 
         <Footer
-          isFavourite={isFavourite}
           title={title}
           authorLabel={authorLabel}
           createdAtLabel={createAtLabel}
-          onClick={() => {}}
-          disabled={false}
+          isFavourite={isFavourite}
+          onClick={toggleFavourite}
+          disabled={pendingFavourite || pendingUnfavourite}
         />
       </div>
     </Link>
