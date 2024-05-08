@@ -1,3 +1,5 @@
+"use client";
+
 export const Participants = () => {
   return (
     <div
@@ -9,7 +11,9 @@ export const Participants = () => {
   );
 };
 
-Participants.Skeleton = function ParticipantsSkeleton() {
+// In order to use in Loading, which is a server component.
+// Participants.Skeleton = function ParticipantsSkeleton() {
+export const ParticipantsSkeleton = () => {
   return (
     <div
       className="absolute h-12 top-2 right-2 bg-white rounded-md

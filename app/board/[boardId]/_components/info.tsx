@@ -1,3 +1,5 @@
+"use client";
+
 export const Info = () => {
   return (
     <div
@@ -9,7 +11,9 @@ export const Info = () => {
   );
 };
 
-Info.Skeleton = function InfoSkeleton() {
+// In order to use in Loading, which is a server component.
+// Info.Skeleton = function InfoSkeleton() {
+export const InfoSkeleton = () => {
   return (
     <div
       className="absolute top-2 left-2 bg-white rounded-md
