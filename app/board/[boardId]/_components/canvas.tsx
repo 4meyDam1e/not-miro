@@ -33,6 +33,7 @@ import { Info } from "./info";
 import { Participants } from "./participants";
 import { Toolbar } from "./toolbar";
 import { LayerPreview } from "./layer-preview";
+import { SelectionBox } from "./selection-box";
 import { CursorsPresence } from "./cursors-presence";
 
 const MAX_LAYERS = 100;
@@ -215,6 +216,9 @@ export const Canvas = ({
               selectionColor={layerIdsToColorSelection[layerId]}
             />
           ))}
+          <SelectionBox
+            onResizeHandlePointerDown={() => {}}
+          />
           <CursorsPresence />
         </g>
       </svg>
