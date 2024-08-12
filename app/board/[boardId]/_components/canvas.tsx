@@ -18,7 +18,8 @@ import {
 } from "@/liveblocks.config";
 import {
   connectionIdToColor,
-  pointerEventToCanvasPoint
+  pointerEventToCanvasPoint,
+  resizeBounds,
 } from "@/lib/utils";
 import {
   Camera,
@@ -27,6 +28,8 @@ import {
   Color,
   LayerType,
   Point,
+  Side,
+  XYWH,
 } from "@/types/canvas";
 
 import { Info } from "./info";
@@ -90,6 +93,45 @@ export const Canvas = ({
     setCanvasState({ mode: CanvasMode.None });
   }, [lastUsedColor]);
 
+  const resizeSelectedLayer = useMutation((
+    { storage, self },
+    point: Point,
+  ) => {
+    if (canvasState.mode !== CanvasMode.Resizing) {
+      return;
+    }
+
+    const bounds = resizeBounds(
+      canvasState.initialBounds,
+      canvasState.corner,
+      point
+    );
+
+    const liveLayers = storage.get("layers");
+    const layer = liveLayers.get(self.presence.selection[0]);
+
+    if (layer) {
+      layer.update(bounds);
+    }
+  }, [canvasState]);
+
+  const onResizeHandlePointerDown = useCallback((
+    corner: Side,
+    initialBounds: XYWH,
+  ) => {
+    console.log({
+      corner,
+      initialBounds,
+    });
+
+    history.pause()
+    setCanvasState({
+      mode: CanvasMode.Resizing,
+      initialBounds,
+      corner,
+    });
+  }, [history]);
+
   const onWheel = useCallback((e: React.WheelEvent) => {
     setCamera((camera) => ({
       x: camera.x - e.deltaX,
@@ -105,8 +147,16 @@ export const Canvas = ({
 
     const current = pointerEventToCanvasPoint(e, camera);
 
+    if (canvasState.mode === CanvasMode.Resizing) {
+      resizeSelectedLayer(current);
+    }
+
     setMyPresence({ cursor: current });
-  }, []);
+  }, [
+    camera,
+    canvasState,
+    resizeSelectedLayer,
+  ]);
 
   const onPointerLeave = useMutation(({ setMyPresence }) => {
     setMyPresence({ cursor: null });
@@ -117,11 +167,6 @@ export const Canvas = ({
     e
   ) => {
     const point = pointerEventToCanvasPoint(e, camera);
-
-    console.log({
-      point,
-      mode: canvasState.mode,
-    });
 
     if (canvasState.mode === CanvasMode.Inserting) {
       insertLayer(canvasState.layerType, point);
@@ -217,7 +262,7 @@ export const Canvas = ({
             />
           ))}
           <SelectionBox
-            onResizeHandlePointerDown={() => {}}
+            onResizeHandlePointerDown={onResizeHandlePointerDown}
           />
           <CursorsPresence />
         </g>
