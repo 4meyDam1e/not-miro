@@ -90,7 +90,7 @@ export const Canvas = ({
     liveLayers.set(layerId, layer);
 
     setMyPresence({ selection: [layerId] }, { addToHistory: true });
-    setCanvasState({ mode: CanvasMode.None, });
+    setCanvasState({ mode: CanvasMode.None });
   }, [lastUsedColor]);
 
   const translateSelectedLayers = useMutation((
@@ -171,8 +171,8 @@ export const Canvas = ({
   const onWheel = useCallback((e: React.WheelEvent) => {
     setCamera((camera) => ({
       x: camera.x - e.deltaX,
-      y: camera.y - e.deltaY
-    }))
+      y: camera.y - e.deltaY,
+    }));
   }, []);
 
   const onPointerMove = useMutation((
@@ -187,6 +187,11 @@ export const Canvas = ({
       translateSelectedLayers(current);
     } else if (canvasState.mode === CanvasMode.Resizing) {
       resizeSelectedLayer(current);
+    } else if(canvasState.mode === CanvasMode.Pressing) {
+      setCamera((camera) => ({
+        x: camera.x + current.x - canvasState.origin.x,
+        y: camera.y + current.y - canvasState.origin.y,
+      }));
     }
 
     setMyPresence({ cursor: current });
@@ -199,6 +204,7 @@ export const Canvas = ({
 
   const onPointerLeave = useMutation(({ setMyPresence }) => {
     setMyPresence({ cursor: null });
+    setCanvasState({ mode: CanvasMode.None });
   }, []);
 
   const onPointerDown = useCallback((
@@ -230,12 +236,11 @@ export const Canvas = ({
       canvasState.mode === CanvasMode.Pressing
     ) {
       unselectLayers();
-
-      setCanvasState({ mode: CanvasMode.None, });
+      setCanvasState({ mode: CanvasMode.None });
     } else if (canvasState.mode === CanvasMode.Inserting) {
       insertLayer(canvasState.layerType, point);
     } else {
-      setCanvasState({ mode: CanvasMode.None, });
+      setCanvasState({ mode: CanvasMode.None });
     }
 
     history.resume();
