@@ -3,6 +3,7 @@
 import { nanoid } from "nanoid";
 import {
   useCallback,
+  useEffect,
   useMemo,
   useState
 } from "react";
@@ -292,6 +293,26 @@ export const Canvas = ({
 
     return layerIdsToColorSelection;
   }, [selections]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === "z") {
+        if (canUndo) {
+          history.undo();
+        }
+      } else if ((e.ctrlKey && e.key === "y")) {
+        if (canRedo) {
+          history.redo();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [canUndo, canRedo, history]);
 
   return (
     <main
