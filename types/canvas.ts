@@ -1,5 +1,7 @@
 export enum CanvasMode {
   None,
+  Moving,
+  MovingPressing,
   Pressing,
   SelectionNet,
   Translating,
@@ -100,6 +102,13 @@ export enum Side {
 export type CanvasState =
   | {
     mode: CanvasMode.None,
+  }
+  | {
+    mode: CanvasMode.Moving,
+  }
+  | {
+    mode: CanvasMode.MovingPressing,
+    origin: Point;
   }
   | {
     mode: CanvasMode.Pressing,

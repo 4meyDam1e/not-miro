@@ -2,6 +2,7 @@
 
 import {
   Circle,
+  Hand,
   MousePointer2,
   Pencil,
   Redo2,
@@ -14,6 +15,8 @@ import {
 import { CanvasMode, CanvasState, LayerType } from "@/types/canvas";
 
 import { ToolButton } from "./tool-button";
+
+import { useMutation } from "@/liveblocks.config";
 
 interface ToolbarProps {
   canvasState: CanvasState;
@@ -32,6 +35,15 @@ export const Toolbar = ({
   canUndo,
   canRedo,
 }: ToolbarProps) => {
+
+  const unselectLayers = useMutation((
+    { self, setMyPresence }
+  ) => {
+    if (self.presence.selection.length > 0) {
+      setMyPresence({ selection: [] }, { addToHistory: true });
+    }
+  },[]);
+
   return (
     <div
       className="absolute top-[50%] -translate-y-[50%] left-2 flex
@@ -41,6 +53,18 @@ export const Toolbar = ({
         className="bg-white rounded-md p-1.5 flex gap-y-1 flex-col
         items-center shadow-md"
       >
+        <ToolButton
+          label="Move"
+          icon={Hand}
+          onClick={() => {
+            unselectLayers();
+            setCanvasState({ mode: CanvasMode.Moving, });
+          }}
+          isActive={
+            canvasState.mode === CanvasMode.Moving ||
+            canvasState.mode === CanvasMode.MovingPressing
+          }
+        />
         <ToolButton
           label="Select"
           icon={MousePointer2}
