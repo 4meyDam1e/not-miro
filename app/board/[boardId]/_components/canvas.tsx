@@ -36,6 +36,8 @@ import {
   Side,
   XYWH,
 } from "@/types/canvas";
+import { useDisableScrollBounce } from "@/hooks/use-disable-scroll-bounce";
+import { useDeleteLayers } from "@/hooks/use-delete-layers";
 
 import { Info } from "./info";
 import { Path } from "./path";
@@ -69,6 +71,7 @@ export const Canvas = ({
     b: 0,
   });
 
+  useDisableScrollBounce();
   const history = useHistory();
   const canUndo = useCanUndo();
   const canRedo = useCanRedo();
@@ -441,15 +444,35 @@ export const Canvas = ({
     return layerIdsToColorSelection;
   }, [selections]);
 
+  const deleteLayers = useDeleteLayers();
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === "z") {
-        if (canUndo) {
-          history.undo();
+      switch (e.key) {
+        case "Delete":
+          deleteLayers();
+          break;
+        case "z": {
+          if (e.ctrlKey || e.metaKey) {
+            if (e.shiftKey) {
+              if (canRedo) {
+                history.redo();
+              }
+            } else {
+              if (canUndo) {
+                history.undo();
+              }
+            }
+          }
+          break;
         }
-      } else if ((e.ctrlKey && e.key === "y")) {
-        if (canRedo) {
-          history.redo();
+        case "y": {
+          if (e.ctrlKey || e.metaKey) {
+            if (canRedo) {
+              history.redo();
+            }
+          }
+          break;
         }
       }
     };
@@ -462,7 +485,8 @@ export const Canvas = ({
   }, [
     canUndo,
     canRedo,
-    history
+    history,
+    deleteLayers,
   ]);
 
   return (
