@@ -165,7 +165,7 @@ export const Canvas = ({
     );
 
     setMyPresence({ selection: ids });
-  }, []);
+  }, [layerIds]);
 
   const resizeSelectedLayer = useMutation((
     { storage, self },
@@ -249,6 +249,7 @@ export const Canvas = ({
       setCanvasState({ mode: CanvasMode.Moving });
     } else if (
       canvasState.mode === CanvasMode.Pressing ||
+      canvasState.mode === CanvasMode.SelectionNet ||
       canvasState.mode === CanvasMode.Translating ||
       canvasState.mode === CanvasMode.Resizing
     ) {
