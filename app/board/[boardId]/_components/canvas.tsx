@@ -150,7 +150,7 @@ export const Canvas = ({
     current: Point,
     origin: Point,
   ) => {
-    const layers = storage.get("layers").toImmutable();
+    const liveLayers = storage.get("layers").toImmutable();
     setCanvasState({
       mode: CanvasMode.SelectionNet,
       origin,
@@ -159,7 +159,7 @@ export const Canvas = ({
 
     const ids = findIntersectingLayersWithRectangle(
       layerIds,
-      layers,
+      liveLayers,
       origin,
       current
     );
