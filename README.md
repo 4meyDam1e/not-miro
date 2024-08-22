@@ -6,7 +6,11 @@ Followed [Miro Clone | Code With Antonio](https://youtube.com/watch?v=ADJKbuayub
 
 ## Technologies Used
 - NextJS
+- Convex + Clerk (authentication and organization management)
+- Liveblocks (collaboration)
+
+### Frontend
+- Tailwind CSS
 - shadcn/ui
-- Convex
-- Clerk
-- Liveblocks
+- sonner
+- perfect-freehand

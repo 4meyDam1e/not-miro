@@ -1,13 +1,15 @@
 "use client";
 
 import { memo } from "react";
+import { colorToCss } from "@/lib/utils";
 
 import { LayerType } from "@/types/canvas";
 import { useStorage } from "@/liveblocks.config";
-import { Rectangle } from "./rectangle";
-import { Ellipse } from "./ellipse";
 import { Text } from "./text";
 import { StickyNote } from "./sticky-note";
+import { Rectangle } from "./rectangle";
+import { Ellipse } from "./ellipse";
+import { Path } from "./path";
 
 interface LayerPreviewProps {
   id: string;
@@ -27,6 +29,24 @@ export const LayerPreview = memo(({
   }
 
   switch (layer.type) {
+    case LayerType.Text:
+      return (
+        <Text
+          id={id}
+          layer={layer}
+          onPointerDown={onLayerPointerDown}
+          selectionColor={selectionColor}
+        />
+      );
+    case LayerType.Note:
+      return (
+        <StickyNote
+          id={id}
+          layer={layer}
+          onPointerDown={onLayerPointerDown}
+          selectionColor={selectionColor}
+        />
+      );
     case LayerType.Rectangle:
       return (
         <Rectangle
@@ -45,22 +65,16 @@ export const LayerPreview = memo(({
           selectionColor={selectionColor}
         />
       );
-    case LayerType.Text:
+    case LayerType.Path:
       return (
-        <Text
-          id={id}
-          layer={layer}
-          onPointerDown={onLayerPointerDown}
-          selectionColor={selectionColor}
-        />
-      );
-    case LayerType.Note:
-      return (
-        <StickyNote
-          id={id}
-          layer={layer}
-          onPointerDown={onLayerPointerDown}
-          selectionColor={selectionColor}
+        <Path
+          key={id}
+          x={layer.x}
+          y={layer.y}
+          points={layer.points}
+          fill={layer.fill ? colorToCss(layer.fill) : "#000"}
+          onPointerDown={(e) => onLayerPointerDown(e, id)}
+          stroke={selectionColor}
         />
       );
     default:

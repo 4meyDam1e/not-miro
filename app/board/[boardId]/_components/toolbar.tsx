@@ -126,7 +126,7 @@ export const Toolbar = ({
           }
         />
         <ToolButton
-          label="Pen"
+          label="Pencil"
           icon={Pencil}
           onClick={() => setCanvasState({
             mode: CanvasMode.Pencil,
