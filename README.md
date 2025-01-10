@@ -1,4 +1,4 @@
-# Miro Clone
+# Not Miro (a Miro clone)
 
 ## Description
 Created a clone of the Miro canvas tool used in scrum as a side project to learn NextJS.
