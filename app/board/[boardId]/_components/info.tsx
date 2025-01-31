@@ -103,8 +103,6 @@ export const Info = ({
   );
 };
 
-// In order to use in Loading, which is a server component.
-// Info.Skeleton = function InfoSkeleton() {
 export const InfoSkeleton = () => {
   return (
     <div

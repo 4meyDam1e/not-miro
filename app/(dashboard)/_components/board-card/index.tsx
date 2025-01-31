@@ -12,11 +12,9 @@ import { api } from "@/convex/_generated/api";
 import { Actions } from "@/components/actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useApiMutation } from "@/hooks/use-api-mutation";
-// import { useMutation } from "convex/react";
 
 import { Footer } from "./footer";
 import { Overlay } from "./overlay";
-// import { Id } from "@/convex/_generated/dataModel";
 
 interface BoardCardProps {
   id: string;

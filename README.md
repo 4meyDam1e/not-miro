@@ -1,16 +1,19 @@
-# Not Miro (a Miro clone)
+# NotMiro 🚀
 
 ## Description
-Created a clone of the Miro canvas tool used in scrum as a side project to learn NextJS.
-Followed [Miro Clone | Code With Antonio](https://youtube.com/watch?v=ADJKbuayubE&t=14720s) tutorial.
+A collaborative canvas scrum tool, a clone of the popular Miro app.
 
-## Technologies Used
-- NextJS
-- Convex + Clerk (authentication and organization management)
-- Liveblocks (collaboration)
+## Features
+- Real-time collaboration
+- Email authentication
+- Canvas tools: sticky notes, shapes, drawing, resizing/reshaping objects
 
-### Frontend
-- Tailwind CSS
+## Tech Stack 🛠️    
+- Next.js
+- Convex
+- Clerk
+- Liveblocks
+- TailwindCSS
 - shadcn/ui
 - sonner
 - perfect-freehand
